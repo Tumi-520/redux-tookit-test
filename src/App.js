@@ -1,23 +1,30 @@
-import logo from './logo.svg';
+import React,{useEffect} from 'react';
 import './App.css';
+import { useSelector, useDispatch } from 'react-redux'
+import { add, down,asyncAdd } from './store/features/counterSlice'
+import { loadDate } from './store/features/movieSlice'
 
 function App() {
+  const { count } = useSelector((state) => state.counter)
+  const { list } = useSelector((state) => state.movie)
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(loadDate())
+  },[])
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>{count}</h1>
+      < button onClick={()=>dispatch(add({step:2}))}> + </button>
+      < button onClick={()=>dispatch(down({step:1}))}> - </button>
+      < button onClick={() => dispatch(asyncAdd())}> + </button>
+      {
+        list.map((item,index) => {
+          return <div key={index}>
+            <div>{ item.title}</div>
+            <div>{ item.content}</div>
+          </div>
+        })
+      }
     </div>
   );
 }
